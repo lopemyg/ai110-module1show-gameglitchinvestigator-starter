@@ -47,13 +47,11 @@ The AI helped me design the regression tests by suggesting I write cases that di
 
 ## 4. What did you learn about Streamlit and state?
 
-- How would you explain Streamlit "reruns" and session state to a friend who has never used Streamlit?
+Every time a user clicks a button or changes an input in Streamlit, the entire Python script reruns from top to bottom — it's not like a normal program that stays alive and waits. That means any variable you create normally disappears between clicks. `st.session_state` is how you keep values alive across those reruns: it's a dictionary that Streamlit preserves for you, so things like the secret number, the attempt counter, and the score survive each rerun instead of resetting. The trickiest part I ran into was that the attempts counter was initialized inside the `if "attempts" not in st.session_state` block, which only runs once — but it was set to `1` instead of `0`, so the very first rerun after a guess was already counting wrong. Once I understood that each button click = full script rerun, the bug made complete sense.
 
 ---
 
 ## 5. Looking ahead: your developer habits
 
-- What is one habit or strategy from this project that you want to reuse in future labs or projects?
-  - This could be a testing habit, a prompting strategy, or a way you used Git.
-- What is one thing you would do differently next time you work with AI on a coding task?
-- In one or two sentences, describe how this project changed the way you think about AI generated code.
+One habit I want to reuse is placing `# FIXME` comments at the exact line where I suspect a bug before asking the AI for help. It forced me to actually read and understand the code first rather than just pasting the whole file into chat, and it gave the AI a precise target so the response was more focused and useful. In the future, I would review the AI's diff more slowly before accepting it — on the high score feature I almost missed that the win message was reading the saved score before writing it, which would have shown the wrong value. This project changed how I think about AI-generated code: I used to assume it was either correct or obviously broken, but now I know the scariest bugs are the ones that run fine and silently produce wrong output, like hints that flip on every other guess with no error message anywhere.
+
