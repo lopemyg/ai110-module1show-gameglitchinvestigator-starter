@@ -1,3 +1,29 @@
+import json
+import os
+
+HIGHSCORE_FILE = "highscore.json"
+
+
+def load_high_score() -> int:
+    """Return the saved high score, or 0 if none exists yet."""
+    if not os.path.exists(HIGHSCORE_FILE):
+        return 0
+    try:
+        with open(HIGHSCORE_FILE) as f:
+            data = json.load(f)
+        return int(data.get("high_score", 0))
+    except Exception:
+        return 0
+
+
+def save_high_score(score: int) -> None:
+    """Persist score to disk if it beats the current high score."""
+    current = load_high_score()
+    if score > current:
+        with open(HIGHSCORE_FILE, "w") as f:
+            json.dump({"high_score": score}, f)
+
+
 def get_range_for_difficulty(difficulty: str):
     """Return (low, high) inclusive range for a given difficulty."""
     if difficulty == "Easy":

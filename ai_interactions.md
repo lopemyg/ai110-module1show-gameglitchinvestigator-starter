@@ -10,15 +10,19 @@
 
 **What task did you give the agent?**
 
-<!-- Describe the goal you asked the agent to accomplish -->
+"Plan and implement a High Score tracker that saves the player's best score to a file so it persists across sessions. Show it in the sidebar and display a 'New high score!' message on a win."
 
 **What did the agent do?**
 
-<!-- List the steps the agent took (files edited, commands run, etc.) -->
+1. Added `load_high_score()` and `save_high_score(score)` to `logic_utils.py` — reads/writes `highscore.json` using the `json` and `os` standard library modules. `save_high_score` only overwrites the file if the new score beats the current best.
+2. Updated the import line in `app.py` to include the two new functions.
+3. Added `st.sidebar.metric("🏆 High Score", load_high_score())` to the sidebar so the best score is visible before every game.
+4. Called `save_high_score()` inside the win branch in `app.py`, then read the persisted value back to decide whether to show "New high score!" or display the previous best.
+5. Ran a smoke test in the terminal to confirm that repeated saves only update the file when the new score is strictly higher.
 
 **What did you have to verify or fix manually?**
 
-<!-- Describe anything the agent got wrong or that required human review -->
+The agent's first draft of the win message read back the high score *before* calling `save_high_score`, so a new record would always show the old best rather than "New high score!". The order needed to be: save first, then read back to compare — which I caught by reading the diff carefully and correcting the call order before committing.
 
 ---
 
